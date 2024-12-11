@@ -60,35 +60,75 @@ def test_empty_prices(zero_prices_zero_tax):
     assert str(e.value) == "Неверная цена"
 
 
-# @pytest.mark.parametrize('prices, tax_rate, expected',
-#                          [([1, 1, 1], 0, [1, 1, 1]), ([100, 200, 300], 0.5, [100.5, 201.0, 301.5])])
-# def test_params(prices, tax_rate, expected):
-#     assert calculate_taxes(prices, tax_rate) == expected
-#
-#
-# def test_calc_tax(tax_fixture1):
-#     assert calculate_tax(tax_fixture1[0], tax_fixture1[1]) == 10.5
-#
-#
-# @pytest.mark.parametrize('price, tax_rate, expected', [(100, 10, 110.0), (50, 5, 52.5),
-#                                                        (105, 1, 106.05)])
-# def test_calc_taxes_params(price, tax_rate, expected):
-#     assert calculate_tax(price, tax_rate) == expected
-#
-#
-# def test_negative_price_tax():
-#     with pytest.raises(ValueError) as e:
-#         calculate_tax(-100, 1)
-#         assert str(e.value) == "Неверная цена"
-#
-#
-# def test_negative_tax():
-#     with pytest.raises(ValueError) as e:
-#         calculate_tax(100, -10)
-#         assert str(e.value) == "Неверный налоговый процент"
-#
-#
-# def test_overtax():
-#     with pytest.raises(ValueError) as e:
-#         calculate_tax(100, 200)
-#         assert str(e.value) == "Неверный налоговый процент"
+@pytest.mark.parametrize('prices, tax_rate, expected',
+                         [([1, 1, 1], 0, [1, 1, 1]), ([100, 200, 300], 0.5, [100.5, 201.0, 301.5])])
+def test_params(prices, tax_rate, expected):
+    assert calculate_taxes(prices, tax_rate) == expected
+
+
+def test_calc_tax(tax_fixture1):
+    assert calculate_tax(tax_fixture1[0], tax_fixture1[1]) == 10.5
+
+
+@pytest.mark.parametrize('price, tax_rate, expected', [(100, 10, 110.0), (50, 5, 52.5),
+                                                       (105, 1, 106.05)])
+def test_calc_taxes_params(price, tax_rate, expected):
+    assert calculate_tax(price, tax_rate) == expected
+
+
+def test_negative_price_tax():
+    with pytest.raises(ValueError) as e:
+        calculate_tax(-100, 1)
+        # assert str(e.value) == "Неверная цена"
+
+
+def test_negative_tax():
+    with pytest.raises(ValueError) as e:
+        calculate_tax(100, -10)
+        # assert str(e.value) == "Неверный налоговый процент"
+
+
+def test_overtax():
+    with pytest.raises(ValueError) as e:
+        calculate_tax(100, 200)
+        # assert str(e.value) == "Неверный налоговый процент"
+
+
+def test_invalid_param_types1():
+    with pytest.raises(TypeError):
+        calculate_tax('0', 10)
+
+
+def test_invalid_param_types2(prices):
+    with pytest.raises(TypeError):
+        calculate_tax(100, '10')
+
+
+def test_invalid_discount():
+    with pytest.raises(ValueError):
+        calculate_tax(100, 5, 150)
+
+
+def test_invalid_precision():
+    with pytest.raises(ValueError):
+        calculate_tax(100, 5, -5)
+
+
+def test_invalid_precision2():
+    with pytest.raises(TypeError):
+        calculate_tax(100, 5, 5.4, 5.4)
+
+
+def test_invalid_precision_type():
+    with pytest.raises(TypeError):
+        calculate_tax(100, 5, '5')
+
+
+def test_negative_precision_type():
+    with pytest.raises(ValueError):
+        calculate_tax(100, 5, 5, -1)
+
+
+def test_negative_price():
+    with pytest.raises(ValueError) as e:
+        calculate_tax(-100, 5)

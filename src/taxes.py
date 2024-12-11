@@ -36,6 +36,9 @@ def calculate_tax(price: float, tax_rate: float, discount: float = 0, precision:
     if not isinstance(precision, int):
         raise TypeError("Число цифр после запятой должно быть целочисленным")
 
+    if precision < 0:
+        raise ValueError("Число цифр после запятой должно быть целочисленным и положительным")
+
     result = price * (tax_rate / 100 + 1) * (1 - discount / 100)
     return round(result, precision)
 
