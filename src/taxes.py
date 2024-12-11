@@ -26,4 +26,4 @@ def calculate_tax(price: float, tax_rate: float) -> float:
     return round(price * (tax_rate / 100 + 1), 2)
 
 
-print(calculate_tax(10, 5))
+# print(calculate_taxes([10], '0'))

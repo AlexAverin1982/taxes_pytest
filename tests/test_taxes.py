@@ -29,10 +29,23 @@ def test_negative_prices():
     assert str(e.value) == "Неверная цена"
 
 
+def test_zero_price():
+    with pytest.raises(ValueError) as e:
+        calculate_taxes([0, ], 2)
+
+    assert str(e.value) == "Неверная цена"
+
+
 def test_none():
     with pytest.raises(TypeError) as e:
         calculate_taxes(None, None)
     assert str(e.value) == "'<' not supported between instances of 'NoneType' and 'int'"
+
+
+def test_str_taxrate():
+    with pytest.raises(TypeError) as e:
+        calculate_taxes([10], 'some_string')
+    assert str(e.value) == "'<' not supported between instances of 'str' and 'int'"
 
 
 def test_empty_prices(zero_prices_zero_tax):
@@ -48,10 +61,11 @@ def test_params(prices, tax_rate, expected):
 
 
 def test_calc_tax(tax_fixture1):
-    assert calculate_taxes(tax_fixture1) == 0.5
+    assert calculate_tax(tax_fixture1[0], tax_fixture1[1]) == 10.5
 
 
-@pytest.mark.parametrize('price, tax_rate, expected', [(100, 10, 110.0), (50, 5, 52.5)])
+@pytest.mark.parametrize('price, tax_rate, expected', [(100, 10, 110.0), (50, 5, 52.5),
+                                                       (105, 1, 106.05)])
 def test_calc_taxes_params(price, tax_rate, expected):
     assert calculate_tax(price, tax_rate) == expected
 
